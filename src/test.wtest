@@ -1,0 +1,31 @@
+import drCasa.*
+
+describe "drCasa"
+{
+	var logan = new Persona(50000,37)
+	var cameron = new Medico(20000,38,350)
+	var house = new Medico(100000, 38, 500)
+	var fedePadre = new JefeDepto(1000000, 37,1000)
+	
+	var muerte = new Muerte(10) 
+	var malaria = new Infecciosa(5000)
+	var lupus = new Autoinmune(10000) 
+	
+	fixture
+	{
+		logan.enfermar(malaria)
+		logan.enfermar(lupus)
+		house.enfermar(muerte)
+	}
+	
+	test "la malaria sabe reproducirse"
+	{
+		malaria.reproducir()
+		assert.equals(10000,malaria.celulasAmenazadas())
+	}
+	
+	test "logan sin ser atendido no está curado"
+	{
+		assert.notThat(logan.estoyCurado())
+	}
+}

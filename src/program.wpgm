@@ -1,0 +1,54 @@
+import drCasa.*
+
+program abc
+{
+	var malaria = new Infecciosa(5000)
+	var lupus = new Autoinmune(10000)
+	var logan = new Persona(50000,37)
+	
+	console.println("Malaria inicialmente: " + malaria)
+	console.println("Lupus inicialmente: " + lupus)
+	console.println("Logan inicialmente: " + logan)
+	
+	malaria.reproducir()
+	logan.enfermar(malaria)
+	logan.vivirUnDia()
+	
+	console.println("Logan con malaria: " + logan)
+	
+	logan.enfermar(lupus)
+	logan.vivirUnDia()
+	console.println("Logan con malaria y lupus: " + logan)
+	
+	malaria.atenuar(1000)
+	lupus.atenuar(500)
+	logan.vivirUnDia()
+	
+	console.println("Logan luego de atenuar enfermedades: " + logan)
+	
+	//Parte 2
+	var cameron = new Medico(20000,38,300)
+	var house = new Medico(100000, 38, 500)
+	var muerte = new Muerte(10) 
+	
+	cameron.atenderPaciente(logan)
+	console.println("Logan atendido por Cameron: " + logan)
+	
+	//house.subordinados(cameron)
+	//house.atenderPaciente(logan)
+	//console.println("House hace que Cameron atienda a Logan: " + logan)
+	console.println("House antes de muerte: " + house)
+	house.enfermar(muerte)
+	house.vivirUnDia()
+	console.println("House despues de muerte: " + house)
+	
+	var fedePadre = new JefeDepto(1000000, 37,1000)
+	console.println("fedePadre: " + fedePadre)
+	fedePadre.subordinados(cameron)
+	fedePadre.subordinados(house)
+	console.println("la lista de subordinados es: " + fedePadre.subordinados())
+	
+	console.println("logan antes: " + logan)
+	fedePadre.atenderPaciente(logan)
+	console.println("ahora logan está: " + logan)
+}

@@ -1,38 +1,74 @@
-/* class Persona
+ class Persona
 {
 	var enfermedades = []
-	var cantidadDeCelulas
+	var celulas
 	var temperatura
-	var diasVividos
-	var nombre
-		
-	method enfermar() {}
-} */
-
-class Infecciosa
-{
-	var celulasAmenazadas
 	
-	constructor(celAm)
+	constructor(cel, temp)
 	{
-		celulasAmenazadas = celAm
+		celulas = cel
+		temperatura = temp
 	}
 	
-	method cantidadCelulasAmenazadas() = celulasAmenazadas
+	// getters	
+	method celulas() = celulas
+	method temperatura() = temperatura
+	method enfermedades() = enfermedades
 	
-	method efecto(persona)
+	method enfermar(enfermedad) {enfermedades.add(enfermedad)}
+	
+	method aumentarTemperatura(aumento) {temperatura += aumento}
+	method disminuirTemperatura(disminucion) {temperatura -= disminucion}
+	
+	method destruirCelulas(celulasAmenazadas) {celulas -= celulasAmenazadas}
+	
+	method vivirUnDia()
 	{
-
-		persona.aumentarTemperatura(celulasAmenazadas/1000)
+		enfermedades.forEach({enfermedad => enfermedad.afectar(self)})
 	}
 	
-	method reproducir()
+	method estoyCurado()
 	{
-		celulasAmenazadas *= 2
+		return enfermedades.all({enfermedad => enfermedad.celulasAmenazadas() <= 0})
 	}
 }
 
-class Autoinmune
+class Medico inherits Persona
+{
+	var dosisMed
+	
+	constructor(cel,temp,dosis) = super(cel,temp)
+	{dosisMed = dosis}
+	
+	method dosisMed() = dosisMed
+	method dosisMed(dosis) {dosisMed = dosis}
+	
+	method atenderPaciente(persona)
+	{
+		persona.enfermedades().forEach({enf => enf.atenuar(dosisMed)})
+	}
+	
+	override method enfermar(enfermedad)
+	{
+		super(enfermedad)
+		self.atenderPaciente(self)
+	}
+}
+
+class JefeDepto inherits Medico
+{
+	var subordinados = []
+	
+	method subordinados() = subordinados
+	method subordinados(sub) {subordinados.add(sub)}
+	
+	override method atenderPaciente(persona)
+	{
+		subordinados.anyOne().atenderPaciente(persona)
+	}
+}
+
+class Enfermedad
 {
 	var celulasAmenazadas
 	
@@ -40,11 +76,49 @@ class Autoinmune
 	{
 		celulasAmenazadas = celAm
 	}
-
-	method cantidadCelulasAmenazadas () = celulasAmenazadas
-
-	method efecto(persona)
+	
+	method celulasAmenazadas() = celulasAmenazadas
+	
+	method afectar(persona){}
+	
+	method atenuar(cantMedicamento)
 	{
+		celulasAmenazadas -= cantMedicamento*15
+	}
+}
+
+class Infecciosa inherits Enfermedad
+{
+	override method afectar(persona)
+	{
+		persona.aumentarTemperatura(celulasAmenazadas/1000)
+	}
+	
+	method reproducir() {celulasAmenazadas *= 2}
+}
+
+class Autoinmune inherits Enfermedad
+{
+	override method afectar(persona)
+	{
+		persona.destruirCelulas(celulasAmenazadas)
+	}
+}
+
+class Muerte inherits Enfermedad
+{
+	override method afectar(persona)
+	{
+		persona.disminuirTemperatura(persona.temperatura())
+	}
+	override method atenuar(medicamento) {super(0)}
+}
+
+class Sida inherits Infecciosa
+{
+	override method afectar(persona)
+	{
+		super(persona)
 		persona.destruirCelulas(celulasAmenazadas)
 	}
 }
