@@ -30,7 +30,6 @@ program abc
 	//Parte 2
 	var cameron = new Medico(20000,38,300)
 	var house = new Medico(100000, 38, 500)
-	var muerte = new Muerte(10) 
 	
 	cameron.atenderPaciente(logan)
 	console.println("Logan atendido por Cameron: " + logan)

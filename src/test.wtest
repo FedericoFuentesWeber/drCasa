@@ -6,8 +6,7 @@ describe "drCasa"
 	var logan = new Persona(50000,37)
 	var cameron = new Medico(20000,38,350)
 	var house = new JefeDepto(1000000, 37,1000)
-	
-	var muerte = new Muerte(10) 
+
 	var malaria = new Infecciosa(5000)
 	var lupus = new Autoinmune(10000) 
 	

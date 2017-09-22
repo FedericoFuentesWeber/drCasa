@@ -41,13 +41,14 @@ class Autoinmune inherits Enfermedad
 	}
 }
 
-class Muerte inherits Enfermedad
+object muerte
 {
-	override method afectar(persona)
+	method afectar(persona)
 	{
 		persona.disminuirTemperatura(persona.temperatura())
 	}
-	override method atenuar(medicamento) {super(0)}
+	method atenuar(medicamento){}
+	method estaViva() = true
 }
 
 class Sida inherits Enfermedad
