@@ -1,11 +1,11 @@
 import drCasa.*
+import enfermedad.*
 
 describe "drCasa"
 {
 	var logan = new Persona(50000,37)
 	var cameron = new Medico(20000,38,350)
-	var house = new Medico(100000, 38, 500)
-	var fedePadre = new JefeDepto(1000000, 37,1000)
+	var house = new JefeDepto(1000000, 37,1000)
 	
 	var muerte = new Muerte(10) 
 	var malaria = new Infecciosa(5000)
@@ -15,6 +15,7 @@ describe "drCasa"
 	{
 		logan.enfermar(malaria)
 		logan.enfermar(lupus)
+		house.nuevoEsclavo(cameron)
 		house.enfermar(muerte)
 	}
 	
@@ -27,5 +28,12 @@ describe "drCasa"
 	test "logan sin ser atendido no está curado"
 	{
 		assert.notThat(logan.estoyCurado())
+	}
+	
+	test "fedePadre sin esclavos tira error"
+	{
+		house.subordinados().clear()
+		//assert.throwsExceptionWithMessage("jefe sin esclavos, no puede atender", {house.atenderPaciente(logan)})
+		assert.throwsExceptionWithType(new SinEmpleadosException(), {house.atenderPaciente(logan)})
 	}
 }

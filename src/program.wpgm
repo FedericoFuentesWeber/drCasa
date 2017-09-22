@@ -1,4 +1,5 @@
 import drCasa.*
+import enfermedad.*
 
 program abc
 {
@@ -44,8 +45,8 @@ program abc
 	
 	var fedePadre = new JefeDepto(1000000, 37,1000)
 	console.println("fedePadre: " + fedePadre)
-	fedePadre.subordinados(cameron)
-	fedePadre.subordinados(house)
+	fedePadre.nuevoEsclavo(cameron)
+	fedePadre.nuevoEsclavo(house)
 	console.println("la lista de subordinados es: " + fedePadre.subordinados())
 	
 	console.println("logan antes: " + logan)

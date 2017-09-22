@@ -1,4 +1,6 @@
- class Persona
+class SinEmpleadosException inherits Exception{}
+
+class Persona
 {
 	var enfermedades = []
 	var celulas
@@ -31,6 +33,12 @@
 	{
 		return enfermedades.all({enfermedad => enfermedad.celulasAmenazadas() <= 0})
 	}
+	
+	method recibirMedicamento(dosis)
+	{
+		enfermedades.forEach({enf => enf.atenuar(dosis)})
+		enfermedades = enfermedades.filter({enf => enf.estaViva()})
+	}
 }
 
 class Medico inherits Persona
@@ -45,7 +53,7 @@ class Medico inherits Persona
 	
 	method atenderPaciente(persona)
 	{
-		persona.enfermedades().forEach({enf => enf.atenuar(dosisMed)})
+		persona.recibirMedicamento(self.dosisMed())
 	}
 	
 	override method enfermar(enfermedad)
@@ -59,66 +67,19 @@ class JefeDepto inherits Medico
 {
 	var subordinados = []
 	
+	constructor(cel,temp,dosis) = super(cel,temp)
+	
 	method subordinados() = subordinados
-	method subordinados(sub) {subordinados.add(sub)}
+	method nuevoEsclavo(sub) {subordinados.add(sub)}
 	
 	override method atenderPaciente(persona)
 	{
+		if(subordinados.isEmpty())
+		{
+			// error.throwWithMessage("jefe sin esclavos, no puede atender")
+			// throw new Exception("bla bla")
+			throw new SinEmpleadosException("Un jefe sin empleados no puede atender pacientes")
+		}
 		subordinados.anyOne().atenderPaciente(persona)
-	}
-}
-
-class Enfermedad
-{
-	var celulasAmenazadas
-	
-	constructor(celAm)
-	{
-		celulasAmenazadas = celAm
-	}
-	
-	method celulasAmenazadas() = celulasAmenazadas
-	
-	method afectar(persona){}
-	
-	method atenuar(cantMedicamento)
-	{
-		celulasAmenazadas -= cantMedicamento*15
-	}
-}
-
-class Infecciosa inherits Enfermedad
-{
-	override method afectar(persona)
-	{
-		persona.aumentarTemperatura(celulasAmenazadas/1000)
-	}
-	
-	method reproducir() {celulasAmenazadas *= 2}
-}
-
-class Autoinmune inherits Enfermedad
-{
-	override method afectar(persona)
-	{
-		persona.destruirCelulas(celulasAmenazadas)
-	}
-}
-
-class Muerte inherits Enfermedad
-{
-	override method afectar(persona)
-	{
-		persona.disminuirTemperatura(persona.temperatura())
-	}
-	override method atenuar(medicamento) {super(0)}
-}
-
-class Sida inherits Infecciosa
-{
-	override method afectar(persona)
-	{
-		super(persona)
-		persona.destruirCelulas(celulasAmenazadas)
 	}
 }
